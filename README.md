@@ -1,3 +1,6 @@
+
+<img width="1703" alt="Screenshot 2025-02-25 at 8 09 08 PM" src="https://github.com/user-attachments/assets/1582f2b8-1798-4786-b5da-199b14816f84" />
+
 # recruiting-webapp-character
 React coding test
 
