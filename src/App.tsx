@@ -12,6 +12,8 @@ function App() {
     return initialAttributes;
   });
 
+  const [selectedClass, setSelectedClass] = useState<Class | null>(null);
+
   const handleIncrement = (attr: string) => {
     setAttributes(prev => ({
       ...prev,
@@ -31,6 +33,10 @@ function App() {
     return Object.entries(requirements).every(([attr, minValue]) => 
       attributes[attr] >= minValue
     );
+  };
+
+  const handleClassClick = (className: Class) => {
+    setSelectedClass(className === selectedClass ? null : className);
   };
 
   return (
@@ -54,16 +60,20 @@ function App() {
           {(Object.keys(CLASS_LIST) as Class[]).map(className => (
             <div 
               key={className} 
-              className={`class-item ${meetsClassRequirements(className) ? 'requirements-met' : 'requirements-not-met'}`}
+              className={`class-item ${meetsClassRequirements(className) ? 'requirements-met' : 'requirements-not-met'} ${selectedClass === className ? 'selected' : ''}`}
+              onClick={() => handleClassClick(className)}
             >
               <h3>{className}</h3>
-              <div className="class-requirements">
-                {Object.entries(CLASS_LIST[className]).map(([attr, value]) => (
-                  <div key={attr} className="requirement-item">
-                    {attr}: {value}
-                  </div>
-                ))}
-              </div>
+              {selectedClass === className && (
+                <div className="class-requirements">
+                  <h4>Minimum Requirements:</h4>
+                  {Object.entries(CLASS_LIST[className]).map(([attr, value]) => (
+                    <div key={attr} className="requirement-item">
+                      {attr}: {value}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>
