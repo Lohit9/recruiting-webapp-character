@@ -4,6 +4,7 @@ import { ATTRIBUTE_LIST, CLASS_LIST, SKILL_LIST } from './consts';
 import { Attributes, Class } from './types';
 
 const API_URL = 'https://recruiting.verylongdomaintotestwith.ca/api/{Lohit9}/character';
+const MAX_TOTAL_ATTRIBUTES = 70;
 
 function App() {
   const [attributes, setAttributes] = useState<Record<string, number>>(() => {
@@ -26,15 +27,13 @@ function App() {
   const [saveStatus, setSaveStatus] = useState<string>('');
 
   useEffect(() => {
-    // Load character data when component mounts
     loadCharacter();
   }, []);
 
   useEffect(() => {
-    // Save character data whenever state changes
     const saveTimer = setTimeout(() => {
       saveCharacter();
-    }, 1000); // Debounce save calls
+    }, 1000);
 
     return () => clearTimeout(saveTimer);
   }, [attributes, skillPoints, selectedClass]);
@@ -87,6 +86,10 @@ function App() {
     return Math.floor((attributeValue - 10) / 2);
   };
 
+  const getTotalAttributePoints = (): number => {
+    return Object.values(attributes).reduce((sum, value) => sum + value, 0);
+  };
+
   const getTotalSkillPoints = (): number => {
     const intModifier = calculateModifier(attributes['Intelligence']);
     return 10 + (4 * intModifier);
@@ -101,10 +104,15 @@ function App() {
   };
 
   const handleIncrement = (attr: string) => {
-    setAttributes(prev => ({
-      ...prev,
-      [attr]: prev[attr] + 1
-    }));
+    const totalPoints = getTotalAttributePoints();
+    if (totalPoints < MAX_TOTAL_ATTRIBUTES) {
+      setAttributes(prev => ({
+        ...prev,
+        [attr]: prev[attr] + 1
+      }));
+    } else {
+      setSaveStatus(`Cannot increase attributes above total of ${MAX_TOTAL_ATTRIBUTES}`);
+    }
   };
 
   const handleDecrement = (attr: string) => {
@@ -112,6 +120,7 @@ function App() {
       ...prev,
       [attr]: Math.max(0, prev[attr] - 1)
     }));
+    setSaveStatus('');
   };
 
   const handleSkillIncrement = (skillName: string) => {
@@ -154,11 +163,18 @@ function App() {
       <section className="App-section">
         <div className="attributes-container">
           <h2>Attributes</h2>
+          <div className="attribute-points-info">
+            Total Points: {getTotalAttributePoints()} / {MAX_TOTAL_ATTRIBUTES}
+          </div>
           {ATTRIBUTE_LIST.map(attr => (
             <div key={attr} className="attribute-row" style={{margin: '10px 0'}}>
               <div className="attribute-value">
                 {attr}: {attributes[attr]}
-                <button style={{marginLeft: '5px'}} onClick={() => handleIncrement(attr)}>+</button>
+                <button 
+                  style={{marginLeft: '5px'}} 
+                  onClick={() => handleIncrement(attr)}
+                  disabled={getTotalAttributePoints() >= MAX_TOTAL_ATTRIBUTES}
+                >+</button>
                 <button onClick={() => handleDecrement(attr)}>-</button>
               </div>
               <div className="modifier">

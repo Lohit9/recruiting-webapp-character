@@ -152,11 +152,24 @@
   font-size: 0.9em;
 }
 
+.attribute-points-info {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: hsla(0, 0%, 100%, 0.1);
+  border-radius: 5px;
+  font-weight: bold;
+}
+
 .attribute-row {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 15px 0;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .attribute-value {
