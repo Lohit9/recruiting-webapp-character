@@ -3,7 +3,7 @@ import './App.css';
 import { ATTRIBUTE_LIST, CLASS_LIST, SKILL_LIST } from './consts';
 import { Attributes, Class } from './types';
 
-const API_URL = 'https://recruiting.verylongdomaintotestwith.ca/api/{Lohit9}/character';
+const API_URL = 'https://recruiting.verylongdomaintotestwith.ca/api/Lohit9/character';
 const MAX_TOTAL_ATTRIBUTES = 70;
 
 function App() {
