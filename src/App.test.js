@@ -24,10 +24,18 @@ test('renders skills with points and modifiers', () => {
   // Check if available points info is displayed
   expect(within(skillsContainer).getByText(/Available Points:/i)).toBeInTheDocument();
 
-  // Check if all skills are rendered
+  // Check if all skills are rendered with their names
   SKILL_LIST.forEach(skill => {
-    expect(within(skillsContainer).getByText(skill.name)).toBeInTheDocument();
-    expect(within(skillsContainer).getByText(/Points: 0/i)).toBeInTheDocument();
+    const skillRow = within(skillsContainer).getByText(skill.name).closest('.skill-row');
+    expect(skillRow).toBeInTheDocument();
+    
+    // Check if the skill has points display and controls
+    const pointsElement = within(skillRow).getByText(/Points:/i);
+    expect(pointsElement).toBeInTheDocument();
+    
+    // Check if the skill has modifier display
+    const modifierElement = within(skillRow).getByText(new RegExp(`Modifier \\(${skill.attributeModifier}\\):`, 'i'));
+    expect(modifierElement).toBeInTheDocument();
   });
 });
 

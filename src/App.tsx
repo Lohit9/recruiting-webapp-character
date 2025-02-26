@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import { ATTRIBUTE_LIST, CLASS_LIST, SKILL_LIST } from './consts';
 import { Attributes, Class } from './types';
+
+const API_URL = 'https://recruiting.verylongdomaintotestwith.ca/api/{Lohit9}/character';
 
 function App() {
   const [attributes, setAttributes] = useState<Record<string, number>>(() => {
@@ -21,6 +23,65 @@ function App() {
   });
 
   const [selectedClass, setSelectedClass] = useState<Class | null>(null);
+  const [saveStatus, setSaveStatus] = useState<string>('');
+
+  useEffect(() => {
+    // Load character data when component mounts
+    loadCharacter();
+  }, []);
+
+  useEffect(() => {
+    // Save character data whenever state changes
+    const saveTimer = setTimeout(() => {
+      saveCharacter();
+    }, 1000); // Debounce save calls
+
+    return () => clearTimeout(saveTimer);
+  }, [attributes, skillPoints, selectedClass]);
+
+  const loadCharacter = async () => {
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        throw new Error('Failed to load character');
+      }
+      const data = await response.json();
+      
+      if (data.attributes) setAttributes(data.attributes);
+      if (data.skillPoints) setSkillPoints(data.skillPoints);
+      if (data.selectedClass) setSelectedClass(data.selectedClass);
+      
+      setSaveStatus('Character loaded successfully');
+    } catch (error) {
+      console.error('Error loading character:', error);
+      setSaveStatus('Failed to load character');
+    }
+  };
+
+  const saveCharacter = async () => {
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          attributes,
+          skillPoints,
+          selectedClass,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save character');
+      }
+
+      setSaveStatus('Character saved successfully');
+    } catch (error) {
+      console.error('Error saving character:', error);
+      setSaveStatus('Failed to save character');
+    }
+  };
 
   const calculateModifier = (attributeValue: number): number => {
     return Math.floor((attributeValue - 10) / 2);
@@ -88,6 +149,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>React Coding Exercise</h1>
+        {saveStatus && <div className="save-status">{saveStatus}</div>}
       </header>
       <section className="App-section">
         <div className="attributes-container">

@@ -25,6 +25,18 @@
   font-size: calc(10px + 2vmin);
   color: white;
   padding: 20px;
+  position: relative;
+}
+
+.save-status {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  font-size: 0.8em;
+  padding: 5px 10px;
+  border-radius: 3px;
+  background-color: hsla(0, 0%, 100%, 0.1);
+  opacity: 0.8;
 }
 
 .App-section {
