@@ -14,6 +14,10 @@ function App() {
 
   const [selectedClass, setSelectedClass] = useState<Class | null>(null);
 
+  const calculateModifier = (attributeValue: number): number => {
+    return Math.floor((attributeValue - 10) / 2);
+  };
+
   const handleIncrement = (attr: string) => {
     setAttributes(prev => ({
       ...prev,
@@ -48,10 +52,15 @@ function App() {
         <div className="attributes-container">
           <h2>Attributes</h2>
           {ATTRIBUTE_LIST.map(attr => (
-            <div key={attr} style={{margin: '10px 0'}}>
-              {attr}: {attributes[attr]}
-              <button style={{marginLeft: '5px'}} onClick={() => handleIncrement(attr)}>+</button>
-              <button onClick={() => handleDecrement(attr)}>-</button>
+            <div key={attr} className="attribute-row" style={{margin: '10px 0'}}>
+              <div className="attribute-value">
+                {attr}: {attributes[attr]}
+                <button style={{marginLeft: '5px'}} onClick={() => handleIncrement(attr)}>+</button>
+                <button onClick={() => handleDecrement(attr)}>-</button>
+              </div>
+              <div className="modifier">
+                {attr} Modifier: {calculateModifier(attributes[attr]) >= 0 ? '+' : ''}{calculateModifier(attributes[attr])}
+              </div>
             </div>
           ))}
         </div>
