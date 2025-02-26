@@ -12,10 +12,31 @@ function App() {
     return initialAttributes;
   });
 
+  const [skillPoints, setSkillPoints] = useState<Record<string, number>>(() => {
+    const initialSkillPoints: Record<string, number> = {};
+    SKILL_LIST.forEach(skill => {
+      initialSkillPoints[skill.name] = 0;
+    });
+    return initialSkillPoints;
+  });
+
   const [selectedClass, setSelectedClass] = useState<Class | null>(null);
 
   const calculateModifier = (attributeValue: number): number => {
     return Math.floor((attributeValue - 10) / 2);
+  };
+
+  const getTotalSkillPoints = (): number => {
+    const intModifier = calculateModifier(attributes['Intelligence']);
+    return 10 + (4 * intModifier);
+  };
+
+  const getSpentSkillPoints = (): number => {
+    return Object.values(skillPoints).reduce((sum, points) => sum + points, 0);
+  };
+
+  const getRemainingSkillPoints = (): number => {
+    return getTotalSkillPoints() - getSpentSkillPoints();
   };
 
   const handleIncrement = (attr: string) => {
@@ -30,6 +51,26 @@ function App() {
       ...prev,
       [attr]: Math.max(0, prev[attr] - 1)
     }));
+  };
+
+  const handleSkillIncrement = (skillName: string) => {
+    if (getRemainingSkillPoints() > 0) {
+      setSkillPoints(prev => ({
+        ...prev,
+        [skillName]: prev[skillName] + 1
+      }));
+    }
+  };
+
+  const handleSkillDecrement = (skillName: string) => {
+    setSkillPoints(prev => ({
+      ...prev,
+      [skillName]: Math.max(0, prev[skillName] - 1)
+    }));
+  };
+
+  const calculateSkillTotal = (skillName: string, attributeModifier: string): number => {
+    return skillPoints[skillName] + calculateModifier(attributes[attributeModifier]);
   };
 
   const meetsClassRequirements = (className: Class): boolean => {
@@ -64,6 +105,36 @@ function App() {
             </div>
           ))}
         </div>
+
+        <div className="skills-container">
+          <h2>Skills</h2>
+          <div className="skill-points-info">
+            Available Points: {getRemainingSkillPoints()} / {getTotalSkillPoints()}
+          </div>
+          {SKILL_LIST.map(skill => (
+            <div key={skill.name} className="skill-row">
+              <div className="skill-name">{skill.name}</div>
+              <div className="skill-controls">
+                Points: {skillPoints[skill.name]}
+                <button 
+                  onClick={() => handleSkillIncrement(skill.name)}
+                  disabled={getRemainingSkillPoints() <= 0}
+                >+</button>
+                <button 
+                  onClick={() => handleSkillDecrement(skill.name)}
+                  disabled={skillPoints[skill.name] <= 0}
+                >-</button>
+              </div>
+              <div className="skill-modifier">
+                Modifier ({skill.attributeModifier}): {calculateModifier(attributes[skill.attributeModifier]) >= 0 ? '+' : ''}{calculateModifier(attributes[skill.attributeModifier])}
+              </div>
+              <div className="skill-total">
+                Total: {calculateSkillTotal(skill.name, skill.attributeModifier)}
+              </div>
+            </div>
+          ))}
+        </div>
+
         <div className="classes-container">
           <h2>Classes</h2>
           {(Object.keys(CLASS_LIST) as Class[]).map(className => (
