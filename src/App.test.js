@@ -1,8 +1,13 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import App from './App';
+import { ATTRIBUTE_LIST } from './consts';
 
-test('renders learn react link', () => {
+test('renders character attributes', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const attributesContainer = screen.getByRole('heading', { name: /attributes/i }).parentElement;
+  
+  ATTRIBUTE_LIST.forEach(attr => {
+    const element = within(attributesContainer).getByText(new RegExp(`${attr}: \\d+`, 'i'));
+    expect(element).toBeInTheDocument();
+  });
 });

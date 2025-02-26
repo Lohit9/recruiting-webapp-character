@@ -24,12 +24,17 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  padding: 20px;
 }
 
 .App-section {
   flex: 1 1 0;
   background-color: hsl(220deg 13% 13%);
   color: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  flex-wrap: wrap;
 }
 
 .App-link {
@@ -43,4 +48,67 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.attributes-container, .classes-container {
+  padding: 20px;
+  border: 1px solid #444;
+  border-radius: 5px;
+  margin: 10px;
+  min-width: 300px;
+  background-color: hsl(220deg 13% 18%);
+}
+
+.class-item {
+  margin: 20px 0;
+  padding: 15px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.requirements-met {
+  background-color: hsla(134, 61%, 41%, 0.2);
+  border: 1px solid hsla(134, 61%, 41%, 0.4);
+}
+
+.requirements-not-met {
+  background-color: hsla(354, 70%, 54%, 0.2);
+  border: 1px solid hsla(354, 70%, 54%, 0.4);
+}
+
+.class-requirements {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.requirement-item {
+  padding: 5px 10px;
+  background-color: hsla(0, 0%, 100%, 0.1);
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+button {
+  margin: 0 5px;
+  padding: 2px 8px;
+  cursor: pointer;
+  border-radius: 3px;
+  border: 1px solid #444;
+  background-color: hsl(220deg 13% 18%);
+  color: white;
+}
+
+button:hover {
+  background-color: hsl(220deg 13% 24%);
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+h3 {
+  margin: 0 0 10px 0;
 }
